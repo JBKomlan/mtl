@@ -3,65 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TransferLink - Console Admin</title>
+    <title>TransferLink - Admin</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; max-width: 500px; margin: 20px auto; padding: 20px; background: #eef2f3; }
-        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        body { font-family: 'Segoe UI', sans-serif; max-width: 500px; margin: 20px auto; padding: 20px; background: #f4f7f6; color: #333; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .logo-container { text-align: center; margin-bottom: 20px; }
+        .logo-text { font-size: 24px; font-weight: 800; background: linear-gradient(45deg, #0056b3, #d4af37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .auth-zone { background: #fff5f5; border: 1px solid #feb2b2; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        label { display: block; margin-top: 10px; font-weight: bold; font-size: 13px; color: #555; }
-        input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
-        .options-zone { display: flex; gap: 15px; margin-top: 10px; background: #f0f4f8; padding: 10px; border-radius: 8px; }
-        .net-section { border-left: 4px solid #ddd; padding-left: 15px; margin-top: 15px; background: #f9f9f9; padding-bottom: 10px; border-radius: 5px; }
-        button { width: 100%; background: #2f855a; color: white; border: none; padding: 15px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; border-radius: 8px; }
-        #result { display: none; margin-top: 20px; padding: 15px; background: #f0fff4; border: 1px solid #25D366; border-radius: 10px; text-align: center; }
-        .wa-link { display: inline-block; background: #075E54; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; }
-        .hint { font-size: 11px; color: #888; margin-top: 2px; }
+        label { display: block; margin-top: 10px; font-weight: 600; font-size: 13px; color: #4a5568; }
+        input { width: 100%; padding: 12px; margin-top: 5px; border-radius: 8px; border: 1px solid #e2e8f0; box-sizing: border-box; }
+        .options-zone { display: flex; gap: 15px; margin: 15px 0; background: #edf2f7; padding: 10px; border-radius: 8px; }
+        .net-section { border-left: 4px solid #cbd5e0; padding-left: 15px; margin-top: 15px; background: #f8fafc; padding-bottom: 10px; border-radius: 5px; }
+        button { width: 100%; background: #2d3748; color: white; border: none; padding: 15px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; border-radius: 8px; transition: 0.3s; }
+        button:hover { background: #1a202c; }
+        #result { display: none; margin-top: 20px; padding: 15px; background: #f0fff4; border: 1px solid #c6f6d5; border-radius: 10px; text-align: center; }
+        .wa-link { display: inline-block; background: #25D366; color: white; padding: 12px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 10px; }
+        .disclaimer { font-size: 10px; color: #718096; margin-top: 30px; text-align: justify; line-height: 1.4; border-top: 1px solid #e2e8f0; padding-top: 15px; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2 style="text-align:center;">🛡️ TransferLink Terminal</h2>
+    <div class="logo-container">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#d4af37"/>
+            <path d="M7 10L12 15L17 10" stroke="#0056b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="logo-text">TransferLink</span>
+    </div>
     
     <div class="auth-zone">
-        <label>🔑 Code de Sécurité Admin</label>
-        <input type="password" id="adminPass" placeholder="fd2026!tg">
+        <label>🔑 Code de Sécurité</label>
+        <input type="password" id="adminPass" placeholder="••••••••">
     </div>
 
     <label>📞 WhatsApp Client</label>
     <input type="number" id="numClient" placeholder="Ex: 90000000">
 
-    <label>💰 Montant de base (FCFA)</label>
+    <label>💰 Montant Initial (FCFA)</label>
     <input type="number" id="montant" placeholder="Ex: 5000">
     
     <div class="options-zone">
-        <label style="display:flex; align-items:center; cursor:pointer; font-size:12px;">
-            <input type="checkbox" id="allowEdit" style="width:auto; margin-right:5px;"> ✏️ Modifiable
+        <label style="display:flex; align-items:center; cursor:pointer; font-size:11px;">
+            <input type="checkbox" id="allowEdit" style="width:auto; margin-right:5px;"> ✏️ Éditable
         </label>
-        <label style="display:flex; align-items:center; cursor:pointer; font-size:12px;">
+        <label style="display:flex; align-items:center; cursor:pointer; font-size:11px;">
             <input type="checkbox" id="addFrais" style="width:auto; margin-right:5px;"> 📈 Frais 1%
         </label>
     </div>
 
     <div class="net-section" style="border-color: #007bff;">
-        <label>🔵 T-Money (Mixx)</label>
-        <input type="number" id="n1" placeholder="8 chiffres" oninput="if(this.value.length > 8) this.value = this.value.slice(0, 8);">
-        <input type="text" id="id1" placeholder="Nom/Identité">
-        <div class="hint">Séries: 90-93, 70-72</div>
+        <label>🔵 T-Money (Séries 90-93, 70-72)</label>
+        <input type="number" id="n1" placeholder="Numéro 8 chiffres" oninput="if(this.value.length > 8) this.value = this.value.slice(0, 8);">
+        <input type="text" id="id1" placeholder="Nom du bénéficiaire">
     </div>
 
     <div class="net-section" style="border-color: #ffc107;">
-        <label>🟡 Moov (Flooz)</label>
-        <input type="number" id="n2" placeholder="8 chiffres" oninput="if(this.value.length > 8) this.value = this.value.slice(0, 8);">
-        <input type="text" id="id2" placeholder="Nom/Identité">
-        <div class="hint">Séries: 96-99, 79</div>
+        <label>🟡 Moov (Séries 96-99, 79)</label>
+        <input type="number" id="n2" placeholder="Numéro 8 chiffres" oninput="if(this.value.length > 8) this.value = this.value.slice(0, 8);">
+        <input type="text" id="id2" placeholder="Nom du bénéficiaire">
     </div>
 
     <button onclick="generer()">Générer le lien sécurisé</button>
 
     <div id="result">
-        <p style="font-weight: bold;" id="resume"></p>
+        <p id="resume" style="font-weight: bold;"></p>
         <div id="waArea"></div>
+    </div>
+
+    <div class="disclaimer">
+        <b>Disclaimer :</b> Cette initiative vise à simplifier le processus de transfert d'argent mobile à nos utilisateurs et clients en ligne. Nous ne sommes responsables d'aucun préjudice que pourrait entraîner l'utilisation de notre système. Veuillez vous rassurer du montant, du numéro et de l'identité de votre bénéficiaire avant toute validation finale.
     </div>
 </div>
 
@@ -69,11 +80,7 @@
     function generer() {
         const passSaisi = document.getElementById('adminPass').value.trim();
         const CLE_ATTENDUE = "fd2026!tg";
-
-        if (passSaisi !== CLE_ATTENDUE) {
-            alert("❌ Code incorrect.");
-            return;
-        }
+        if (passSaisi !== CLE_ATTENDUE) return alert("❌ Code incorrect.");
 
         const cli = document.getElementById('numClient').value;
         const mtBase = parseFloat(document.getElementById('montant').value);
@@ -81,40 +88,23 @@
         const n2 = document.getElementById('n2').value || "";
         const id1 = document.getElementById('id1').value || "";
         const id2 = document.getElementById('id2').value || "";
-        
         const isEditable = document.getElementById('allowEdit').checked ? "1" : "0";
         const hasFrais = document.getElementById('addFrais').checked ? "1" : "0";
-        const dateGen = Date.now(); // Date de création pour l'expiration 30j
+        const dateGen = Date.now();
 
-        // Validation Préfixes Togo
-        const prefT = ["90", "91", "92", "93", "70", "71", "72"];
-        const prefM = ["96", "97", "98", "99", "79"];
-        const valider = (num, prefs) => num === "" || (num.length === 8 && prefs.includes(num.substring(0,2)));
+        if(!cli || !mtBase) return alert("Veuillez remplir les champs obligatoires.");
 
-        if(!valider(n1, prefT)) return alert("Numéro T-Money invalide.");
-        if(!valider(n2, prefM)) return alert("Numéro Moov invalide.");
-        if(!cli || !mtBase) return alert("Client et Montant obligatoires.");
-
-        const mtFinal = (hasFrais === "1") ? Math.ceil(mtBase * 1.01) : mtBase;
-
-        // Signature incluant la date pour verrouiller l'expiration
+        const mtFinal = hasFrais === "1" ? Math.ceil(mtBase * 1.01) : mtBase;
         const chaine = n1 + "|" + n2 + "|" + mtFinal + "|" + isEditable + "|" + hasFrais + "|" + dateGen + "|" + CLE_ATTENDUE;
         const signature = btoa(unescape(encodeURIComponent(chaine))).substring(0, 15);
         
-        const params = new URLSearchParams({
-            mt: mtFinal, n1: n1, id1: id1, n2: n2, id2: id2,
-            e: isEditable, f: hasFrais, d: dateGen, s: signature
-        });
-
-        const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
-        const lienFinal = baseUrl + "/transfer.html?" + params.toString();
+        const params = new URLSearchParams({ mt: mtFinal, n1, id1, n2, id2, e: isEditable, f: hasFrais, d: dateGen, s: signature });
+        const lienFinal = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + "/transfer.html?" + params.toString();
         
-        const msg = `Bonjour, voici votre lien de Transfert sécurisé (Valide 30j) : ${lienFinal}`;
+        const msg = `*TransferLink* 🛡️\nBonjour, voici votre lien de règlement sécurisé (valide 30j) :\n💰 *Montant :* ${mtFinal} FCFA\n🔗 *Lien :* ${lienFinal}`;
         
-        document.getElementById('resume').innerText = `Total : ${mtFinal} FCFA`;
-        document.getElementById('waArea').innerHTML = `
-            <a href="https://wa.me/${cli}?text=${encodeURIComponent(msg)}" target="_blank" class="wa-link">📲 Envoyer via WhatsApp</a>
-        `;
+        document.getElementById('resume').innerText = `Lien pour ${mtFinal} FCFA généré.`;
+        document.getElementById('waArea').innerHTML = `<a href="https://wa.me/${cli}?text=${encodeURIComponent(msg)}" target="_blank" class="wa-link">📲 Envoyer via WhatsApp</a>`;
         document.getElementById('result').style.display = 'block';
     }
 </script>
