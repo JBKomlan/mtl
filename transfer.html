@@ -3,116 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transfert Sécurisé Par TransferLink</title></title>
+    <title>TransferLink - Paiement</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
-        .amount-input { width: 100%; font-size: 28px; font-weight: bold; text-align: center; border: 2px solid #007bff; border-radius: 12px; padding: 10px; margin: 15px 0; box-sizing: border-box; color: #333; }
-        .amount-input[readonly] { background: #f8f9fa; border-color: #ccc; color: #666; cursor: not-allowed; }
-        .info-num { font-size: 13px; color: #666; margin-bottom: 5px; }
-        .btn-container { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
-        .btn-pay { flex: 1; padding: 18px; border-radius: 15px; color: white; text-decoration: none; font-weight: bold; display: block; font-size: 15px; }
-        .btn-copy { display: none; background: #6c757d; color: white; border: none; padding: 15px; border-radius: 12px; cursor: pointer; font-size: 18px; }
-        .error { color: #dc3545; background: #fff5f5; padding: 25px; border-radius: 15px; border: 1px solid #feb2b2; }
-        .badge-frais { display: inline-block; background: #ebf8ff; color: #2b6cb0; padding: 4px 10px; border-radius: 20px; font-size: 11px; margin-bottom: 10px; border: 1px solid #bee3f8; }
-        .success-copy { background: #28a745 !important; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 10px; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        .logo-text { font-size: 22px; font-weight: 800; background: linear-gradient(45deg, #0056b3, #d4af37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .amount-input { width: 100%; font-size: 26px; font-weight: bold; text-align: center; border: 2px solid #0056b3; border-radius: 12px; padding: 10px; margin: 15px 0; box-sizing: border-box; }
+        .amount-input[readonly] { background: #f8f9fa; border-color: #cbd5e0; color: #4a5568; }
+        .btn-container { display: flex; align-items: center; gap: 8px; margin-top: 15px; }
+        .btn-pay { flex: 1; padding: 16px; border-radius: 12px; color: white; text-decoration: none; font-weight: bold; font-size: 14px; }
+        .btn-copy-stylized { 
+            display: none; width: 45px; height: 50px; background: #f1f5f9; border: 1px solid #e2e8f0; 
+            border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .btn-copy-stylized svg { width: 20px; height: 20px; fill: #64748b; }
+        .btn-copy-stylized:active { transform: scale(0.9); background: #e2e8f0; }
+        .help-text { font-size: 11px; color: #64748b; margin-top: 15px; line-height: 1.4; }
+        .reassurance { font-size: 12px; color: #2d3748; background: #ebf8ff; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #4299e1; }
+        .error { color: #dc3545; background: #fff5f5; padding: 20px; border-radius: 15px; }
+        .disclaimer { font-size: 9px; color: #a0aec0; margin-top: 25px; text-align: justify; border-top: 1px solid #edf2f7; padding-top: 10px; }
     </style>
 </head>
 <body>
 
-<div id="app" class="card">🔐 Vérification...</div>
+<div id="app" class="card">🔐 Vérification sécurisée...</div>
 
 <script>
     const CLE_ATTENDUE = "fd2026!tg";
     const url = new URLSearchParams(window.location.search);
-    
-    const params = {
-        mt: url.get('mt') || "0",
-        n1: url.get('n1') || "",
-        id1: url.get('id1') || "",
-        n2: url.get('n2') || "",
-        id2: url.get('id2') || "",
-        e: url.get('e') || "0",
-        f: url.get('f') || "0",
-        d: url.get('d') || "0",
-        s: url.get('s') || ""
-    };
+    const params = { mt: url.get('mt'), n1: url.get('n1'), id1: url.get('id1'), n2: url.get('n2'), id2: url.get('id2'), e: url.get('e'), f: url.get('f'), d: url.get('d'), s: url.get('s') };
 
     function verifier() {
         const chaine = params.n1 + "|" + params.n2 + "|" + params.mt + "|" + params.e + "|" + params.f + "|" + params.d + "|" + CLE_ATTENDUE;
-        const sigAttendue = btoa(unescape(encodeURIComponent(chaine))).substring(0, 15);
-        return params.s === sigAttendue;
+        return params.s === btoa(unescape(encodeURIComponent(chaine))).substring(0, 15);
     }
 
-    function estExpire() {
-        const trenteJours = 30 * 24 * 60 * 60 * 1000;
-        return (Date.now() - parseInt(params.d)) > trenteJours;
-    }
-
-    function copyUSSD(btn, code) {
+    function copyToClipboard(btn, code) {
         navigator.clipboard.writeText(code).then(() => {
-            btn.innerHTML = "✅";
-            btn.classList.add('success-copy');
-            setTimeout(() => { btn.innerHTML = "📋"; btn.classList.remove('success-copy'); }, 2000);
+            const original = btn.innerHTML;
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="#28a745"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>';
+            setTimeout(() => { btn.innerHTML = original; }, 2000);
         });
     }
 
     function showCopy(id) {
-        setTimeout(() => { document.getElementById('cp-' + id).style.display = 'block'; }, 600);
+        setTimeout(() => { document.getElementById('cp-' + id).style.display = 'flex'; }, 500);
     }
 
     const app = document.getElementById('app');
 
-    if (!verifier()) {
-        app.innerHTML = `<div class="error"><h3>🚫 Lien non certifié</h3><p>Ce lien de paiement a été altéré ou est frauduleux.</p></div>`;
-    } else if (estExpire()) {
-        app.innerHTML = `<div class="error"><h3>⏰ Lien Expiré</h3><p>Ce lien n'est plus valide. Veuillez demander un nouveau lien à KoMo.</p></div>`;
+    if (!verifier() || (Date.now() - parseInt(params.d)) > (30 * 24 * 60 * 60 * 1000)) {
+        app.innerHTML = `<div class="error"><h3>🚫 Lien invalide ou expiré</h3><p>Veuillez demander un nouveau lien.</p></div>`;
     } else {
         const suffixe = (params.f === "1") ? "2" : "1";
-        const readonly = (params.e === "0") ? "readonly" : "";
-
         app.innerHTML = `
-            <h2 style="margin-bottom:5px;">Transfert KoMo</h2>
-            ${params.f === "1" ? '<span class="badge-frais">Frais de 1% inclus</span>' : ''}
-            <label style="font-size:12px; color:#888;">Montant à régler (FCFA) :</label>
-            <input type="number" id="mtField" class="amount-input" value="${params.mt}" ${readonly}>
-            ${params.e === "0" ? '<p style="font-size:11px; color:#aaa; margin-top:-10px;">🔒 Montant certifié non modifiable</p>' : ''}
-            <div id="btns" style="margin-top:20px;"></div>
+            <div style="margin-bottom:15px;">
+                <svg width="35" height="35" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#d4af37"/>
+                    <path d="M7 10L12 15L17 10" stroke="#0056b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="logo-text">TransferLink</span>
+            </div>
+            <div class="reassurance">ℹ️ Après avoir cliqué, validez simplement l'appel sur votre téléphone.</div>
+            <label style="font-size:12px; color:#718096;">Montant à envoyer (FCFA) :</label>
+            <input type="number" id="mtField" class="amount-input" value="${params.mt}" ${params.e === "0" ? 'readonly' : ''}>
+            <div id="btns"></div>
+            <div class="help-text">💡 En cas de souci avec le bouton de transfert, veuillez utiliser l'icône de copie apparue à droite pour coller le code manuellement dans votre application d'appel.</div>
+            <div class="disclaimer"><b>Disclaimer :</b> Cette initiative vise à simplifier le processus de transfert d'argent mobile à nos utilisateurs et clients en ligne. Nous ne sommes responsables d'aucun préjudice. Veuillez vérifier montant, numéro et identité avant validation.</div>
         `;
 
-        const field = document.getElementById('mtField');
-        const btns = document.getElementById('btns');
-
-        function dessiner() {
-            const val = field.value || 0;
+        const draw = () => {
+            const val = document.getElementById('mtField').value || 0;
             let h = "";
+            const copyIcon = '<svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z"/></svg>';
             
             if(params.n1 && params.n1.length === 8) {
-                const code1 = `*145*1*${val}*${params.n1}*${suffixe}#`;
-                h += `<div style="margin-bottom:20px;">
-                        <div class="info-num">Vers T-Money: <b>${params.id1 || params.n1}</b></div>
-                        <div class="btn-container">
-                            <a href="tel:${code1.replace('#', '%23')}" onclick="showCopy('t')" class="btn-pay" style="background:#007bff">🔵 T-Money</a>
-                            <button id="cp-t" class="btn-copy" onclick="copyUSSD(this, '${code1}')">📋</button>
-                        </div>
-                      </div>`;
+                const c1 = `*145*1*${val}*${params.n1}*${suffixe}#`;
+                h += `<div class="btn-container"><a href="tel:${c1.replace('#','%23')}" onclick="showCopy('t')" class="btn-pay" style="background:#007bff">🔵 T-Money (${params.id1 || params.n1})</a><button id="cp-t" class="btn-copy-stylized" onclick="copyToClipboard(this, '${c1}')" style="display:none">${copyIcon}</button></div>`;
             }
-
             if(params.n2 && params.n2.length === 8) {
-                const code2 = `*155*1*1*${params.n2}*${params.n2}*${val}*${suffixe}#`;
-                h += `<div>
-                        <div class="info-num">Vers Moov: <b>${params.id2 || params.n2}</b></div>
-                        <div class="btn-container">
-                            <a href="tel:${code2.replace('#', '%23')}" onclick="showCopy('m')" class="btn-pay" style="background:#ffc107; color:#333">🟡 Flooz (Moov)</a>
-                            <button id="cp-m" class="btn-copy" onclick="copyUSSD(this, '${code2}')">📋</button>
-                        </div>
-                      </div>`;
+                const c2 = `*155*1*1*${params.n2}*${params.n2}*${val}*${suffixe}#`;
+                h += `<div class="btn-container"><a href="tel:${c2.replace('#','%23')}" onclick="showCopy('m')" class="btn-pay" style="background:#ffc107; color:#333">🟡 Moov Flooz (${params.id2 || params.n2})</a><button id="cp-m" class="btn-copy-stylized" onclick="copyToClipboard(this, '${c2}')" style="display:none">${copyIcon}</button></div>`;
             }
-            btns.innerHTML = h || "<p>Aucun mode de réception disponible.</p>";
-        }
-
-        field.addEventListener('input', dessiner);
-        dessiner();
+            document.getElementById('btns').innerHTML = h;
+        };
+        document.getElementById('mtField').addEventListener('input', draw);
+        draw();
     }
 </script>
 </body>
