@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KoMo Pay - Console Admin</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; max-width: 500px; margin: 20px auto; padding: 20px; background: #eef2f3; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .auth-zone { background: #fff5f5; border: 1px solid #feb2b2; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        label { display: block; margin-top: 10px; font-weight: bold; font-size: 13px; color: #555; }
+        input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
+        .options-zone { display: flex; gap: 15px; margin-top: 10px; background: #f0f4f8; padding: 10px; border-radius: 8px; }
+        .net-section { border-left: 4px solid #ddd; padding-left: 15px; margin-top: 15px; background: #f9f9f9; padding-bottom: 10px; border-radius: 5px; }
+        button { width: 100%; background: #2f855a; color: white; border: none; padding: 15px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; border-radius: 8px; }
+        #result { display: none; margin-top: 20px; padding: 15px; background: #f0fff4; border: 1px solid #25D366; border-radius: 10px; text-align: center; }
+        .wa-link { display: inline-block; background: #075E54; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; }
+        .hint { font-size: 11px; color: #888; margin-top: 2px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2 style="text-align:center;">🛡️ KoMo Terminal</h2>
+    
+    <div class="auth-zone">
+        <label>🔑 Code de Sécurité Admin</label>
+        <input type="password" id="adminPass" placeholder="fd2026!tg">
+    </div>
+
+    <label>📞 WhatsApp Client</label>
+    <input type="number" id="numClient" placeholder="Ex: 90000000">
+
+    <label>💰 Montant de base (FCFA)</label>
+    <input type="number" id="montant" placeholder="Ex: 5000">
+    
+    <div class="options-zone">
+        <label style="display:flex; align-items:center; cursor:pointer; font-size:12px;">
+            <input type="checkbox" id="allowEdit" style="width:auto; margin-right:5px;"> ✏️ Modifiable
+        </label>
+        <label style="display:flex; align-items:center; cursor:pointer; font-size:12px;">
+            <input type="checkbox" id="addFrais" style="width:auto; margin-right:5px;"> 📈 Frais 1%
+        </label>
+    </div>
+
+    <div class="net-section" style="border-color: #007bff;">
+        <label>🔵 T-Money (Mixx)</label>
+        <input type="number" id="n1" placeholder="8 chiffres" oninput="if(this.value.length > 8) this.value = this.value.slice(0, 8);">
+        <input type="text" id="id1" placeholder="Nom/Identité">
+        <div class="hint">Séries: 90-93, 70-72</div>
+    </div>
+
+    <div class="net-section" style="border-color: #ffc107;">
+        <label>🟡 Moov (Flooz)</label>
+        <input type="number" id="n2" placeholder="8 chiffres" oninput="if(this.value.length > 8) this.value = this.value.slice(0, 8);">
+        <input type="text" id="id2" placeholder="Nom/Identité">
+        <div class="hint">Séries: 96-99, 79</div>
+    </div>
+
+    <button onclick="generer()">Générer le lien sécurisé</button>
+
+    <div id="result">
+        <p style="font-weight: bold;" id="resume"></p>
+        <div id="waArea"></div>
+    </div>
+</div>
+
+<script>
+    function generer() {
+        const passSaisi = document.getElementById('adminPass').value.trim();
+        const CLE_ATTENDUE = "fd2026!tg";
+
+        if (passSaisi !== CLE_ATTENDUE) {
+            alert("❌ Code incorrect.");
+            return;
+        }
+
+        const cli = document.getElementById('numClient').value;
+        const mtBase = parseFloat(document.getElementById('montant').value);
+        const n1 = document.getElementById('n1').value || "";
+        const n2 = document.getElementById('n2').value || "";
+        const id1 = document.getElementById('id1').value || "";
+        const id2 = document.getElementById('id2').value || "";
+        
+        const isEditable = document.getElementById('allowEdit').checked ? "1" : "0";
+        const hasFrais = document.getElementById('addFrais').checked ? "1" : "0";
+        const dateGen = Date.now(); // Date de création pour l'expiration 30j
+
+        // Validation Préfixes Togo
+        const prefT = ["90", "91", "92", "93", "70", "71", "72"];
+        const prefM = ["96", "97", "98", "99", "79"];
+        const valider = (num, prefs) => num === "" || (num.length === 8 && prefs.includes(num.substring(0,2)));
+
+        if(!valider(n1, prefT)) return alert("Numéro T-Money invalide.");
+        if(!valider(n2, prefM)) return alert("Numéro Moov invalide.");
+        if(!cli || !mtBase) return alert("Client et Montant obligatoires.");
+
+        const mtFinal = (hasFrais === "1") ? Math.ceil(mtBase * 1.01) : mtBase;
+
+        // Signature incluant la date pour verrouiller l'expiration
+        const chaine = n1 + "|" + n2 + "|" + mtFinal + "|" + isEditable + "|" + hasFrais + "|" + dateGen + "|" + CLE_ATTENDUE;
+        const signature = btoa(unescape(encodeURIComponent(chaine))).substring(0, 15);
+        
+        const params = new URLSearchParams({
+            mt: mtFinal, n1: n1, id1: id1, n2: n2, id2: id2,
+            e: isEditable, f: hasFrais, d: dateGen, s: signature
+        });
+
+        const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+        const lienFinal = baseUrl + "/transfer.html?" + params.toString();
+        
+        const msg = `Bonjour, voici votre lien KoMo Pay sécurisé (Valide 30j) : ${lienFinal}`;
+        
+        document.getElementById('resume').innerText = `Total : ${mtFinal} FCFA`;
+        document.getElementById('waArea').innerHTML = `
+            <a href="https://wa.me/${cli}?text=${encodeURIComponent(msg)}" target="_blank" class="wa-link">📲 Envoyer via WhatsApp</a>
+        `;
+        document.getElementById('result').style.display = 'block';
+    }
+</script>
+</body>
+</html>
