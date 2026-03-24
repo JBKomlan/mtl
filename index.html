@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KoMo Pay - Console Admin</title>
+    <title>TransferLink - Console Admin</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; max-width: 500px; margin: 20px auto; padding: 20px; background: #eef2f3; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
@@ -21,7 +21,7 @@
 <body>
 
 <div class="card">
-    <h2 style="text-align:center;">🛡️ KoMo Terminal</h2>
+    <h2 style="text-align:center;">🛡️ TransferLink Terminal</h2>
     
     <div class="auth-zone">
         <label>🔑 Code de Sécurité Admin</label>
@@ -109,7 +109,7 @@
         const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
         const lienFinal = baseUrl + "/transfer.html?" + params.toString();
         
-        const msg = `Bonjour, voici votre lien KoMo Pay sécurisé (Valide 30j) : ${lienFinal}`;
+        const msg = `Bonjour, voici votre lien de Transfert sécurisé (Valide 30j) : ${lienFinal}`;
         
         document.getElementById('resume').innerText = `Total : ${mtFinal} FCFA`;
         document.getElementById('waArea').innerHTML = `
