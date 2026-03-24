@@ -8,7 +8,8 @@
         body { font-family: 'Segoe UI', sans-serif; max-width: 500px; margin: 20px auto; padding: 20px; background: #f4f7f6; color: #333; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
         .logo-container { text-align: center; margin-bottom: 20px; }
-        .logo-text { font-size: 24px; font-weight: 800; background: linear-gradient(45deg, #0056b3, #d4af37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-img { width: 80px; height: auto; margin-bottom: 10px; }
+        .logo-text { display: block; font-size: 24px; font-weight: 800; background: linear-gradient(45deg, #0056b3, #d4af37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .auth-zone { background: #fff5f5; border: 1px solid #feb2b2; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
         label { display: block; margin-top: 10px; font-weight: 600; font-size: 13px; color: #4a5568; }
         input { width: 100%; padding: 12px; margin-top: 5px; border-radius: 8px; border: 1px solid #e2e8f0; box-sizing: border-box; }
@@ -25,15 +26,12 @@
 
 <div class="card">
     <div class="logo-container">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
-            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#d4af37"/>
-            <path d="M7 10L12 15L17 10" stroke="#0056b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <img src="https://raw.githubusercontent.com/JBKomlan/mtl/main/logomtl.png" alt="Logo" class="logo-img">
         <span class="logo-text">TransferLink</span>
     </div>
     
     <div class="auth-zone">
-        <label>🔑 Code de Sécurité</label>
+        <label>🔑 Code de Sécurité Admin</label>
         <input type="password" id="adminPass" placeholder="••••••••">
     </div>
 
@@ -45,21 +43,21 @@
     
     <div class="options-zone">
         <label style="display:flex; align-items:center; cursor:pointer; font-size:11px;">
-            <input type="checkbox" id="allowEdit" style="width:auto; margin-right:5px;"> ✏️ Éditable
+            <input type="checkbox" id="allowEdit" style="width:auto; margin-right:5px;"> ✏️ Montant modifiable
         </label>
         <label style="display:flex; align-items:center; cursor:pointer; font-size:11px;">
-            <input type="checkbox" id="addFrais" style="width:auto; margin-right:5px;"> 📈 Frais 1%
+            <input type="checkbox" id="addFrais" style="width:auto; margin-right:5px;"> 📈 Inclure frais 1%
         </label>
     </div>
 
     <div class="net-section" style="border-color: #007bff;">
-        <label>🔵 T-Money (Séries 90-93, 70-72)</label>
+        <label>🔵 T-Money</label>
         <input type="number" id="n1" placeholder="Numéro 8 chiffres" oninput="if(this.value.length > 8) this.value = this.value.slice(0, 8);">
         <input type="text" id="id1" placeholder="Nom du bénéficiaire">
     </div>
 
     <div class="net-section" style="border-color: #ffc107;">
-        <label>🟡 Moov (Séries 96-99, 79)</label>
+        <label>🟡 Moov Flooz</label>
         <input type="number" id="n2" placeholder="Numéro 8 chiffres" oninput="if(this.value.length > 8) this.value = this.value.slice(0, 8);">
         <input type="text" id="id2" placeholder="Nom du bénéficiaire">
     </div>
@@ -85,8 +83,8 @@
         const cli = document.getElementById('numClient').value;
         const mtBase = parseFloat(document.getElementById('montant').value);
         const n1 = document.getElementById('n1').value || "";
-        const n2 = document.getElementById('n2').value || "";
         const id1 = document.getElementById('id1').value || "";
+        const n2 = document.getElementById('n2').value || "";
         const id2 = document.getElementById('id2').value || "";
         const isEditable = document.getElementById('allowEdit').checked ? "1" : "0";
         const hasFrais = document.getElementById('addFrais').checked ? "1" : "0";
@@ -101,7 +99,7 @@
         const params = new URLSearchParams({ mt: mtFinal, n1, id1, n2, id2, e: isEditable, f: hasFrais, d: dateGen, s: signature });
         const lienFinal = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + "/transfer.html?" + params.toString();
         
-        const msg = `*TransferLink* 🛡️\nBonjour, voici votre lien de règlement sécurisé (valide 30j) :\n💰 *Montant :* ${mtFinal} FCFA\n🔗 *Lien :* ${lienFinal}`;
+        const msg = `*TRANSFERLINK* 🛡️✨\n__________________________\n\nBonjour, voici votre lien de règlement sécurisé (valide 30j) :\n\n💰 *Montant :* ${mtFinal} FCFA\n🔗 *Lien sécurisé :* ${lienFinal}\n\n_Appuyez sur le lien pour finaliser votre transfert._`;
         
         document.getElementById('resume').innerText = `Lien pour ${mtFinal} FCFA généré.`;
         document.getElementById('waArea').innerHTML = `<a href="https://wa.me/${cli}?text=${encodeURIComponent(msg)}" target="_blank" class="wa-link">📲 Envoyer via WhatsApp</a>`;
