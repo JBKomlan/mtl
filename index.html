@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TransferLink - Admin</title>
+    <title>TransferLink- Admin</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; max-width: 500px; margin: 20px auto; padding: 20px; background: #f4f7f6; color: #333; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
@@ -27,7 +27,7 @@
 <div class="card">
     <div class="logo-container">
         <img src="https://raw.githubusercontent.com/JBKomlan/mtl/main/logomtl.png" alt="Logo" class="logo-img">
-        <span class="logo-text">TransferLink</span>
+        <span class="logo-text">* TransferLink #</span>
     </div>
     
     <div class="auth-zone">
@@ -99,7 +99,7 @@
         const params = new URLSearchParams({ mt: mtFinal, n1, id1, n2, id2, e: isEditable, f: hasFrais, d: dateGen, s: signature });
         const lienFinal = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + "/transfer.html?" + params.toString();
         
-        const msg = `*TRANSFERLINK* 🛡️✨\n__________________________\n\nBonjour, voici votre lien de règlement sécurisé (valide 30j) :\n\n💰 *Montant :* ${mtFinal} FCFA\n🔗 *Lien sécurisé :* ${lienFinal}\n\n_Appuyez sur le lien pour finaliser votre transfert._`;
+        const msg = `*TRANSFERLINK* 🛡️✨\n__________________________\n\nBonjour, voici votre lien de règlement sécurisé (valide 30j) :\n\n💰 *Montant :* ${mtFinal} FCFA\n🔗  *Lien sécurisé :* ${lienFinal}\n\n_Appuyez sur le lien pour finaliser votre transfert._`;
         
         document.getElementById('resume').innerText = `Lien pour ${mtFinal} FCFA généré.`;
         document.getElementById('waArea').innerHTML = `<a href="https://wa.me/${cli}?text=${encodeURIComponent(msg)}" target="_blank" class="wa-link">📲 Envoyer via WhatsApp</a>`;
