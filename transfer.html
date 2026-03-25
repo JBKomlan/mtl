@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TransferLink - Paiement Sécurisé</title>
+    <title>TransferLink - Unique & Sécurisé</title>
     
-    <meta property="og:title" content="TransferLink - Paiement Sécurisé">
+    <meta property="og:title" content="TransferLink - Unique & Sécurisé">
     <meta property="og:description" content="Réglez votre transfert en un clic vers un compte Mixx Togo | Flooz.">
     <meta property="og:image" content="https://raw.githubusercontent.com/JBKomlan/mtl/main/logomtl.png">
     <meta property="og:type" content="website">
@@ -60,7 +60,7 @@
     const app = document.getElementById('app');
 
     if (!verifier() || (Date.now() - parseInt(params.d)) > (30 * 24 * 60 * 60 * 1000)) {
-        app.innerHTML = `<div class="error"><h3>🚫 Lien invalide ou expiré</h3><p>Ce lien n'est plus certifié ou a dépassé sa validité de 30 jours.</p></div>`;
+        app.innerHTML = `<div class="error"><h3>🚫 Lien invalide ou expiré</h3><p> Ce lien n'est plus certifié ou a dépassé sa période de validité.</p></div>`;
     } else {
         const suffixe = (params.f === "1") ? "2" : "1";
         app.innerHTML = `
