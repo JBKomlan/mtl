@@ -99,8 +99,8 @@
         const params = new URLSearchParams({ mt: mtFinal, n1, id1, n2, id2, e: isEditable, f: hasFrais, d: dateGen, s: signature });
         const lienFinal = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + "/transfer.html?" + params.toString();
         
-        const msg = `*TRANSFERLINK* \n__________________________\n\nSalut, voici votre lien de règlement sécurisé :\n\n *Montant :* ${mtFinal} FCFA\n  *Lien sécurisé :* ${lienFinal}\n\n_Appuyez sur le lien pour finaliser votre transfert._`;
-        
+        //const msg = `*TRANSFERLINK* \n________________________\n\nSalut, voici votre lien de règlement sécurisé :\n\n *Montant :* ${mtFinal} FCFA\n  *Lien sécurisé :* ${lienFinal}\n\n_Appuyez sur le lien pour finaliser votre transfert._`;
+        const msg = `\n*_Appuyez sur le lien ci-dessus pour finaliser votre transfert._\n*`;
         document.getElementById('resume').innerText = `Lien pour ${mtFinal} FCFA généré.`;
         document.getElementById('waArea').innerHTML = `<a href="https://wa.me/${cli}?text=${encodeURIComponent(msg)}" target="_blank" class="wa-link">📲 Envoyer via WhatsApp</a>`;
         document.getElementById('result').style.display = 'block';
