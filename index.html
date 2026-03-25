@@ -100,7 +100,13 @@
         const lienFinal = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + "/transfer.html?" + params.toString();
         
         //const msg = `*TRANSFERLINK* \n________________________\n\nSalut, voici votre lien de règlement sécurisé :\n\n *Montant :* ${mtFinal} FCFA\n  *Lien sécurisé :* ${lienFinal}\n\n_Appuyez sur le lien pour finaliser votre transfert._`;
-        const msg = `${lienFinal}\n\n*_Appuyez sur le lien ci-dessus pour finaliser votre transfert._*`;
+        //const msg = `${lienFinal}\n\n*_Appuyez sur le lien ci-dessus pour finaliser votre transfert._*`;
+        // Le lien doit être isolé pour que WhatsApp génère l'aperçu
+        const waMessageText = `*TRANSFERLINK* 📲\n\nVoici votre lien de règlement sécurisé pour un montant de *${mtFinal} FCFA*.`;
+        const guideText = "\n*_Cliquez sur le lien pour finaliser votre transfert_*";
+
+        // On place le lien avant la fin avec un saut de ligne net
+        const msg = `${waMessageText}\n\n${lienFinal}\n\n${guideText}`;
         
         document.getElementById('resume').innerText = `Lien pour ${mtFinal} FCFA généré.`;
         document.getElementById('waArea').innerHTML = `<a href="https://wa.me/${cli}?text=${encodeURIComponent(msg)}" target="_blank" class="wa-link">📲 Envoyer via WhatsApp</a>`;
