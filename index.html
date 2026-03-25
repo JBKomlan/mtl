@@ -127,7 +127,7 @@
         
         // --- MESSAGE WHATSAPP ---
         const guideText = `*Appuyez sur le lien ci-dessous pour finaliser votre transfert de ${mtFinal} FCFA.*`;
-        const msg = `🚀 *TRANSFERLINK*\n\n${lienFinal}\n\n${guideText}`;
+        const msg = `\n${lienFinal}\n\n${guideText}`;
         
         document.getElementById('resume').innerText = `Prêt pour ${mtFinal} FCFA`;
         document.getElementById('waArea').innerHTML = `<a href="https://wa.me/${cli}?text=${encodeURIComponent(msg)}" target="_blank" class="wa-link">📲 Envoyer au client</a>`;
