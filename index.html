@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TransferLink- Admin</title>
+    <title>TransferLink - Admin</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; max-width: 500px; margin: 20px auto; padding: 20px; background: #f4f7f6; color: #333; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
@@ -20,6 +20,7 @@
         #result { display: none; margin-top: 20px; padding: 15px; background: #f0fff4; border: 1px solid #c6f6d5; border-radius: 10px; text-align: center; }
         .wa-link { display: inline-block; background: #25D366; color: white; padding: 12px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 10px; }
         .disclaimer { font-size: 10px; color: #718096; margin-top: 30px; text-align: justify; line-height: 1.4; border-top: 1px solid #e2e8f0; padding-top: 15px; }
+        .error-hint { color: #e53e3e; font-size: 11px; margin-top: 2px; display: none; }
     </style>
 </head>
 <body>
@@ -35,30 +36,30 @@
         <input type="password" id="adminPass" placeholder="••••••••">
     </div>
 
-    <label>📞 WhatsApp Client</label>
-    <input type="number" id="numClient" placeholder="Ex: 90000000">
+    <label>📞 WhatsApp Client (Numéro complet)</label>
+    <input type="number" id="numClient" placeholder="Ex: 22890000000">
 
     <label>💰 Montant Initial (FCFA)</label>
     <input type="number" id="montant" placeholder="Ex: 5000">
     
     <div class="options-zone">
         <label style="display:flex; align-items:center; cursor:pointer; font-size:11px;">
-            <input type="checkbox" id="allowEdit" style="width:auto; margin-right:5px;"> ✏️ Montant modifiable
+            <input type="checkbox" id="allowEdit" style="width:auto; margin-right:5px;"> ✏️ Modifiable
         </label>
         <label style="display:flex; align-items:center; cursor:pointer; font-size:11px;">
-            <input type="checkbox" id="addFrais" style="width:auto; margin-right:5px;"> 📈 Inclure frais 1%
+            <input type="checkbox" id="addFrais" style="width:auto; margin-right:5px;"> 📈 Frais 1%
         </label>
     </div>
 
     <div class="net-section" style="border-color: #007bff;">
-        <label>🔵 T-Money</label>
-        <input type="number" id="n1" placeholder="Numéro 8 chiffres" oninput="if(this.value.length > 8) this.value = this.value.slice(0, 8);">
+        <label>🔵 T-Money (90/91/92/93/70/71)</label>
+        <input type="number" id="n1" placeholder="Numéro 8 chiffres">
         <input type="text" id="id1" placeholder="Nom du bénéficiaire">
     </div>
 
     <div class="net-section" style="border-color: #ffc107;">
-        <label>🟡 Moov Flooz</label>
-        <input type="number" id="n2" placeholder="Numéro 8 chiffres" oninput="if(this.value.length > 8) this.value = this.value.slice(0, 8);">
+        <label>🟡 Moov Flooz (94-99)</label>
+        <input type="number" id="n2" placeholder="Numéro 8 chiffres">
         <input type="text" id="id2" placeholder="Nom du bénéficiaire">
     </div>
 
@@ -70,11 +71,24 @@
     </div>
 
     <div class="disclaimer">
-        <b>Disclaimer :</b> Cette initiative vise à simplifier le processus de transfert d'argent mobile à nos utilisateurs et clients en ligne. Nous ne sommes responsables d'aucun préjudice que pourrait entraîner l'utilisation de notre système. Veuillez vous rassurer du montant, du numéro et de l'identité de votre bénéficiaire avant toute validation finale.
+        <b>Disclaimer :</b> Vérifiez scrupuleusement les informations. Les préfixes sont validés selon les normes Togo Cellulaire et Moov Africa.
     </div>
 </div>
 
 <script>
+    function validerNumero(num, reseau) {
+        if (!num) return true; // Optionnel
+        if (num.length !== 8) return false;
+        
+        const prefix2 = num.substring(0, 2);
+        if (reseau === 'tmoney') {
+            return ['90', '91', '92', '93', '70', '71'].includes(prefix2);
+        } else if (reseau === 'flooz') {
+            return ['94', '95', '96', '97', '98', '99'].includes(prefix2);
+        }
+        return false;
+    }
+
     function generer() {
         const passSaisi = document.getElementById('adminPass').value.trim();
         const CLE_ATTENDUE = "fd2026!tg";
@@ -82,34 +96,41 @@
 
         const cli = document.getElementById('numClient').value;
         const mtBase = parseFloat(document.getElementById('montant').value);
-        const n1 = document.getElementById('n1').value || "";
-        const id1 = document.getElementById('id1').value || "";
-        const n2 = document.getElementById('n2').value || "";
-        const id2 = document.getElementById('id2').value || "";
+        const n1 = document.getElementById('n1').value.trim();
+        const id1 = document.getElementById('id1').value.trim();
+        const n2 = document.getElementById('n2').value.trim();
+        const id2 = document.getElementById('id2').value.trim();
+        
+        // --- VALIDATIONS ---
+        if(!cli || !mtBase) return alert("Veuillez remplir les champs obligatoires (Client et Montant).");
+        if(!n1 && !n2) return alert("Veuillez saisir au moins un numéro de réception (T-Money ou Moov).");
+
+        if(n1 && !validerNumero(n1, 'tmoney')) {
+            return alert("❌ Numéro T-Money invalide (Doit être 8 chiffres commençant par 90, 91, 92, 93, 70 ou 71)");
+        }
+        if(n2 && !validerNumero(n2, 'flooz')) {
+            return alert("❌ Numéro Moov invalide (Doit être 8 chiffres commençant par 94, 95, 96, 97, 98 ou 99)");
+        }
+
         const isEditable = document.getElementById('allowEdit').checked ? "1" : "0";
         const hasFrais = document.getElementById('addFrais').checked ? "1" : "0";
         const dateGen = Date.now();
-
-        if(!cli || !mtBase) return alert("Veuillez remplir les champs obligatoires.");
-
         const mtFinal = hasFrais === "1" ? Math.ceil(mtBase * 1.01) : mtBase;
+
+        // Signature logic
         const chaine = n1 + "|" + n2 + "|" + mtFinal + "|" + isEditable + "|" + hasFrais + "|" + dateGen + "|" + CLE_ATTENDUE;
         const signature = btoa(unescape(encodeURIComponent(chaine))).substring(0, 15);
         
         const params = new URLSearchParams({ mt: mtFinal, n1, id1, n2, id2, e: isEditable, f: hasFrais, d: dateGen, s: signature });
-        const lienFinal = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + "/transfer.html?" + params.toString();
+        const currentPath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+        const lienFinal = currentPath + "/transfer.html?" + params.toString();
         
-        //const msg = `*TRANSFERLINK* \n________________________\n\nSalut, voici votre lien de règlement sécurisé :\n\n *Montant :* ${mtFinal} FCFA\n  *Lien sécurisé :* ${lienFinal}\n\n_Appuyez sur le lien pour finaliser votre transfert._`;
-        //const msg = `${lienFinal}\n\n*_Appuyez sur le lien ci-dessus pour finaliser votre transfert._*`;
-        // Le lien doit être isolé pour que WhatsApp génère l'aperçu
-        //const waMessageText = `*TRANSFERLINK* 📲\n\nVoici votre lien de règlement sécurisé pour un montant de *${mtFinal} FCFA*.`;
-        const guideText = "\n*_Cliquez sur le lien pour finaliser votre transfert d'un montant de ${mtFinal} FCFA_*";
-
-        // On place le lien avant la fin avec un saut de ligne net
-        const msg = `\n${lienFinal}\n\n${guideText}`;
+        // --- MESSAGE WHATSAPP ---
+        const guideText = `*Appuyez sur le lien ci-dessous pour finaliser votre transfert de ${mtFinal} FCFA.*`;
+        const msg = `🚀 *TRANSFERLINK*\n\n${lienFinal}\n\n${guideText}`;
         
-        document.getElementById('resume').innerText = `Lien pour ${mtFinal} FCFA généré.`;
-        document.getElementById('waArea').innerHTML = `<a href="https://wa.me/${cli}?text=${encodeURIComponent(msg)}" target="_blank" class="wa-link">📲 Envoyer via WhatsApp</a>`;
+        document.getElementById('resume').innerText = `Prêt pour ${mtFinal} FCFA`;
+        document.getElementById('waArea').innerHTML = `<a href="https://wa.me/${cli}?text=${encodeURIComponent(msg)}" target="_blank" class="wa-link">📲 Envoyer au client</a>`;
         document.getElementById('result').style.display = 'block';
     }
 </script>
