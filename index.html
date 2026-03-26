@@ -126,7 +126,7 @@
         const lienFinal = currentPath + "/transfer.html?" + params.toString();
         
         // --- MESSAGE WHATSAPP ---
-        const guideText = `\n*N° de compte: ${n1} | ${n2}*\nid: ${id1} | ${id2}\n\n*_Appuyez sur le lien ci-dessous pour finaliser votre transfert.*_`;
+        const guideText = `\n*N°*: *${n1}*  *${n2}*\n*Id.*: ${id1}  ${id2}\n*Montant:* [ *${mtFinal}* FCFA] \n\n_*Appuyez sur le lien ci-dessous pour finaliser votre transfert.*_`;
         const msg = `\n${lienFinal}\n\n${guideText}`;
         
         document.getElementById('resume').innerText = `Prêt pour ${mtFinal} FCFA`;
