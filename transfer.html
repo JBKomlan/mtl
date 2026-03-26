@@ -74,22 +74,34 @@
             <div class="disclaimer"><b>Disclaimer :</b> L'initiative TransferLink vise à rapprocher davantage le "Mobile Money" aux Réseaux Sociaux tels que WhatsApp, TikTok et d'autres, à simplifier le processus de transfert d'Argent Mobile à nos utilisateurs et clients en ligne, à réduire les erreurs de transfert tout en créant une preuve de requête de transfert ou paiement alternatif. Toutefois, nous ne sommes responsables d'aucun préjudice éventuel que pourrait entraîner l'utilisation de notre système. Veuillez vérifier montant, numéro et identité du destinataire avant toute validation finale.</div>
         `;
 
-        const draw = () => {
-            const val = document.getElementById('mtField').value || 0;
-            let h = "";
-            const copyIcon = '<svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z"/></svg>';
-            
-            if(params.n1 && params.n1.length === 8) {
-                const c1 = `*145*1*${val}*${params.n1}*${suffixe}#`;
-                h += `<div class="btn-container"><a href="tel:${c1.replace('#','%23')}" onclick="showCopy('t')" class="btn-pay" style="background:#007bff">🔵 Mixx ==> (${params.n1 || ''}  "${params.id1 || ''}")</a><button id="cp-t" class="btn-copy-stylized" onclick="copyToClipboard(this, '${c1}')">${copyIcon}</button></div>`;
-            }
-            if(params.n2 && params.n2.length === 8) {
-                const c2 = `*155*1*1*${params.n2}*${params.n2}*${val}*${suffixe}#`;
-               // h += `<div class="btn-container"><a href="tel:${c2.replace('#','%23')}" onclick="showCopy('m')" class="btn-pay" style="background:#ffc107; color:#333">🟡 Flooz (${params.id2 || params.n2})</a><button id="cp-m" class="btn-copy-stylized" onclick="copyToClipboard(this, '${c2}')">${copyIcon}</button></div>`;
-                h += `<div class="btn-container"><a href="tel:${c2.replace('#','%23')}" onclick="showCopy('m')" class="btn-pay" style="background:#ffc107; color:#333">🟡 Flooz ==> (${params.n2 || ''} "${params.id2 ||''}")</a><button id="cp-m" class="btn-copy-stylized" onclick="copyToClipboard(this, '${c2}')">${copyIcon}</button></div>`;
-            }
-            document.getElementById('btns').innerHTML = h;
-        };
+    const draw = () => {
+    // On récupère la valeur saisie (montant actuel)
+    const val = parseFloat(document.getElementById('mtField').value) || 0;
+    // On récupère le montant minimum autorisé (montant initial du lien)
+    const minAutorise = parseFloat(params.mt) || 0;
+    
+    let h = "";
+    const copyIcon = '<svg viewBox="0 0 24 24"><path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z"/></svg>';
+    
+    // CONDITION : Si le montant est inférieur au minimum, on affiche un message d'erreur au lieu des boutons
+    if (val < minAutorise) {
+        h = `<div style="color: #dc3545; font-size: 13px; margin-top: 10px; font-weight: bold;">
+                ⚠️ Le montant ne peut pas être inférieur à ${minAutorise} FCFA.
+             </div>`;
+    } else {
+        // Génération normale des boutons si le montant est correct ou supérieur
+        if(params.n1 && params.n1.length === 8) {
+            const c1 = `*145*1*${val}*${params.n1}*${suffixe}#`;
+            h += `<div class="btn-container"><a href="tel:${c1.replace('#','%23')}" onclick="showCopy('t')" class="btn-pay" style="background:#007bff">🔵 Mixx ==> (${params.n1 || ''}  "${params.id1 || ''}")</a><button id="cp-t" class="btn-copy-stylized" onclick="copyToClipboard(this, '${c1}')">${copyIcon}</button></div>`;
+        }
+        if(params.n2 && params.n2.length === 8) {
+            const c2 = `*155*1*1*${params.n2}*${params.n2}*${val}*${suffixe}#`;
+            h += `<div class="btn-container"><a href="tel:${c2.replace('#','%23')}" onclick="showCopy('m')" class="btn-pay" style="background:#ffc107; color:#333">🟡 Flooz ==> (${params.n2 || ''} "${params.id2 ||''}")</a><button id="cp-m" class="btn-copy-stylized" onclick="copyToClipboard(this, '${c2}')">${copyIcon}</button></div>`;
+        }
+    }
+    document.getElementById('btns').innerHTML = h;
+};
+
         document.getElementById('mtField').addEventListener('input', draw);
         draw();
     }
