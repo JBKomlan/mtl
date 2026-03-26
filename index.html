@@ -126,8 +126,8 @@
         const lienFinal = currentPath + "/transfer.html?" + params.toString();
         
         // --- MESSAGE WHATSAPP ---
-        const guideText = `\n*N°*: *${n1}*  *${n2}*\n*Id.*: ${id1}  ${id2}\n*Montant:* [ *${mtFinal}* FCFA] \n\n_*Appuyez sur le lien ci-dessous pour finaliser votre transfert.*_`;
-        const msg = `\n${lienFinal}\n\n${guideText}`;
+        const guideText = `\n*N°* *${n1}*  *${n2}*\n*Id.* ${id1}  ${id2}\n*Montant:* [ *${mtFinal}* FCFA ] \n\n_*Appuyez sur le lien ci-dessous pour finaliser votre transfert.*_`;
+        const msg = `${lienFinal}\n${guideText}`;
         
         document.getElementById('resume').innerText = `Prêt pour ${mtFinal} FCFA`;
         document.getElementById('waArea').innerHTML = `<a href="https://wa.me/${cli}?text=${encodeURIComponent(msg)}" target="_blank" class="wa-link">📲 Envoyer au client</a>`;
