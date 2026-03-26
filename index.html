@@ -28,7 +28,7 @@
 <div class="card">
     <div class="logo-container">
         <img src="https://raw.githubusercontent.com/JBKomlan/mtl/main/logomtl.png" alt="Logo" class="logo-img">
-        <span class="logo-text">* TransferLink #</span>
+        <span class="logo-text">TransferLink*</span>
     </div>
     
     <div class="auth-zone">
@@ -52,13 +52,13 @@
     </div>
 
     <div class="net-section" style="border-color: #007bff;">
-        <label>🔵 T-Money (90/91/92/93/70/71)</label>
+        <label>🔵 T-Money (90/91/92/93/70/71/72)</label>
         <input type="number" id="n1" placeholder="Numéro 8 chiffres">
         <input type="text" id="id1" placeholder="Nom du bénéficiaire">
     </div>
 
     <div class="net-section" style="border-color: #ffc107;">
-        <label>🟡 Moov Flooz (94-99)</label>
+        <label>🟡 Moov Flooz (79-99)</label>
         <input type="number" id="n2" placeholder="Numéro 8 chiffres">
         <input type="text" id="id2" placeholder="Nom du bénéficiaire">
     </div>
@@ -71,7 +71,7 @@
     </div>
 
     <div class="disclaimer">
-        <b>Disclaimer :</b> Vérifiez scrupuleusement les informations. Les préfixes sont validés selon les normes Togo Cellulaire et Moov Africa.
+        <b>Disclaimer :</b> Vérifiez scrupuleusement les informations. Les préfixes sont validés selon les normes Togo Cellulaire et Moov.
     </div>
 </div>
 
@@ -82,9 +82,9 @@
         
         const prefix2 = num.substring(0, 2);
         if (reseau === 'tmoney') {
-            return ['90', '91', '92', '93', '70', '71'].includes(prefix2);
+            return ['90', '91', '92', '93', '70', '71', '72'].includes(prefix2);
         } else if (reseau === 'flooz') {
-            return ['94', '95', '96', '97', '98', '99'].includes(prefix2);
+            return ['79', '96', '97', '98', '99'].includes(prefix2);
         }
         return false;
     }
@@ -103,13 +103,13 @@
         
         // --- VALIDATIONS ---
         if(!cli || !mtBase) return alert("Veuillez remplir les champs obligatoires (Client et Montant).");
-        if(!n1 && !n2) return alert("Veuillez saisir au moins un numéro de réception (T-Money ou Moov).");
+        if(!n1 && !n2) return alert("Veuillez saisir au moins un numéro de réception (Mixx by Yas ou Moov Money Flooz).");
 
         if(n1 && !validerNumero(n1, 'tmoney')) {
-            return alert("❌ Numéro T-Money invalide (Doit être 8 chiffres commençant par 90, 91, 92, 93, 70 ou 71)");
+            return alert("❌ Numéro T-Money invalide (Doit être 8 chiffres commençant par 90, 91, 92, 93, 70, 71 ou 72)");
         }
         if(n2 && !validerNumero(n2, 'flooz')) {
-            return alert("❌ Numéro Moov invalide (Doit être 8 chiffres commençant par 94, 95, 96, 97, 98 ou 99)");
+            return alert("❌ Numéro Moov invalide (Doit être 8 chiffres commençant par 79, 96, 97, 98 ou 99)");
         }
 
         const isEditable = document.getElementById('allowEdit').checked ? "1" : "0";
@@ -126,7 +126,7 @@
         const lienFinal = currentPath + "/transfer.html?" + params.toString();
         
         // --- MESSAGE WHATSAPP ---
-        const guideText = `*Appuyez sur le lien ci-dessous pour finaliser votre transfert de ${mtFinal} FCFA.*`;
+        const guideText = `\n*N° de compte: ${n1} | ${n2}*\nid: ${id1} | ${id2}\n\n*_Appuyez sur le lien ci-dessous pour finaliser votre transfert.*_`;
         const msg = `\n${lienFinal}\n\n${guideText}`;
         
         document.getElementById('resume').innerText = `Prêt pour ${mtFinal} FCFA`;
