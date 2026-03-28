@@ -167,10 +167,10 @@
         
         // --- MESSAGE WHATSAPP ---
         const stylemtFinal = mtFinal.toLocaleString('fr-FR') + " FCFA";
-        const guideText = `\n*N°* *${n1}*  *${n2}*\n*Id.* ${id1 || id2}\n*Montant:* [ *${mtFinal}* FCFA ] \n_______________________\n_*Cliquez sur le lien pour finaliser votre transfert.*_`;
+        const guideText = `\n*N°* *${n1}*  *${n2}*\n*Id.* ${id1 || id2}\n*Montant:* [ *${stylemtFinal}* ] \n_______________________\n_*Cliquez sur le lien pour finaliser votre transfert.*_`;
         const msg = `${lienFinal}\n${guideText}`;
         
-        document.getElementById('resume').innerText = `Prêt pour ${stylemtFinal}`;
+        document.getElementById('resume').innerText = `Lien généré pour ${stylemtFinal}`;
         document.getElementById('waArea').innerHTML = `<a href="https://wa.me/${cli}?text=${encodeURIComponent(msg)}" target="_blank" class="wa-link">📲 Envoyer au client</a>`;
         document.getElementById('result').style.display = 'block';
     }
