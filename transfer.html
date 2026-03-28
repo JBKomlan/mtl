@@ -116,11 +116,11 @@
         // Génération normale des boutons si le montant est correct ou supérieur
         if(params.n1 && params.n1.length === 8) {
             const c1 = `*145*1*${val}*${params.n1}*${suffixe}#`;
-            h += `<div class="btn-container"><a href="tel:${c1.replace('#','%23')}" onclick="showCopy('t')" class="btn-pay" style="background:#007bff">🔵 Mixx ==> (${params.n1 || ''}  "${params.id1 || ''}")</a><button id="cp-t" class="btn-copy-stylized" onclick="copyToClipboard(this, '${c1}')">${copyIcon}</button></div>`;
+            h += `<div class="btn-container"><a href="tel:${c1.replace('#','%23')}" onclick="showCopy('t')" class="btn-pay" style="background:#007bff; font-size:16px;">🔵 MiXX ==> (${params.n1 || ''}  "${params.id1 || ''}")</a><button id="cp-t" class="btn-copy-stylized" onclick="copyToClipboard(this, '${c1}')">${copyIcon}</button></div>`;
         }
         if(params.n2 && params.n2.length === 8) {
             const c2 = `*155*1*1*${params.n2}*${params.n2}*${val}*${suffixe}#`;
-            h += `<div class="btn-container"><a href="tel:${c2.replace('#','%23')}" onclick="showCopy('m')" class="btn-pay" style="background:#ffc107; color:#333">🟡 Flooz ==> (${params.n2 || ''} "${params.id2 ||''}")</a><button id="cp-m" class="btn-copy-stylized" onclick="copyToClipboard(this, '${c2}')">${copyIcon}</button></div>`;
+            h += `<div class="btn-container"><a href="tel:${c2.replace('#','%23')}" onclick="showCopy('m')" class="btn-pay" style="background:#ffc107; color:#333; font-size:16px;">🟡 FlOOZ ==> (${params.n2 || ''} "${params.id2 ||''}")</a><button id="cp-m" class="btn-copy-stylized" onclick="copyToClipboard(this, '${c2}')">${copyIcon}</button></div>`;
         }
     }
     document.getElementById('btns').innerHTML = h;
